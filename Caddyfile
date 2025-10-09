@@ -1,0 +1,17 @@
+:8080 {
+    root * /var/www/html
+    encode gzip
+    php_fastcgi php:9000 {
+        dial_timeout 30s
+    }
+
+    file_server
+    # ถ้าไฟล์ไม่พบ ให้ส่งไปที่ index.php
+    try_files {path} {path}/ /index.php
+
+    # เปิด log (access log)
+    log {
+        output stdout
+        format console
+    }
+}
