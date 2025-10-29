@@ -108,6 +108,20 @@ class LoginController  extends JwtController
             // dump($arrdata,$user);
             if ($user) {
                 $jwt = JwtService::getToken($user);
+                // dump($jwt);
+                $arr_cookie_options = array (
+                    'expires' => time() + 60*60*24*30, 
+                    'path' => '/', 
+                    'domain' => null, // '.example.com', // leading dot for compatibility or use subdomain
+                    'secure' => true,     // or false
+                    'httponly' => true,    // or false
+                    'samesite' => 'None' // None || Lax  || Strict
+                    );
+                setcookie("token",$jwt["token"],$arr_cookie_options); 
+                setcookie("ref_token",$jwt["reftoken"],$arr_cookie_options); 
+                setcookie("pubkey",$jwt["pubkey"],$arr_cookie_options); 
+                setcookie("user",$user,$arr_cookie_options); 
+                
                 return [
                     "user" => $user,
                     "token" => $jwt["token"],
@@ -116,6 +130,7 @@ class LoginController  extends JwtController
                     "success" => true,
                     "key" => USERJWT,
                 ];
+                
             } else {
                 // throw new Exception("กรุณา login ใหม่!", 1);
                 $this->server->setStatus(401);
